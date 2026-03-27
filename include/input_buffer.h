@@ -63,7 +63,7 @@ public:
 
       if (read_bytes == MIDDLE && self->m_file.peek() != EOF) {
         while (valid_end > bg_start && self->m_buf[valid_end - 1] != '\n') {
-          valid_end--;
+          valid_end++;
         }
         std::streamoff backtrack = (bg_start + read_bytes) - valid_end;
         self->m_file.seekg(-backtrack, std::ios::cur);
@@ -100,6 +100,8 @@ public:
   }
 
   void sync_workers() { m_barrier.arrive_and_wait(); }
+
+  size_t active_end() {return m_active_end;}
 
 private:
   void flip_buffers() {
